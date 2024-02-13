@@ -62,30 +62,31 @@ def line_numbers_to_davis_language(line_numbers):
         operation = ""
         # check what kind of operation we have based on number of b
         if b == 0:
-            operation = f"{variable}<={variable}"
+            operation = f"{variable} <- {variable}"
         elif b == 1:
-            operation = f"{variable}<={variable}+1"
+            operation = f"{variable} <- {variable} + 1"
         elif b == 2:
-            operation = f"{variable}<={variable}-1"
+            operation = f"{variable} <-{variable} - 1"
         else:
             jump_label_index = b - 3
             jump_label_cycle = jump_label_index // 26
             jump_label_char = label_order[jump_label_index % 26]
             jump_label = f"[{jump_label_char}{jump_label_cycle + 1}]"
-            operation = f"if {variable} != 0 go to {jump_label}"
+            operation = f"IF {variable} != 0 GOTO {jump_label[1:-1]}"
         
         # saving correct syntax of each line
         line = f"{label} {operation}".strip()
         lines.append(line)
     
-    return lines, max(max_z, max_x), program_codes
+    return lines, max(2*max_z, 2*max_x-1), program_codes
 
 def main():
-    input_str = input("Please give me line numbers separated by space: ")
+    # input_str = input("Please give me line numbers separated by space: ")
+    input_str = input()
     line_numbers = [int(num) for num in input_str.split()]
-    program_lines = line_numbers_to_davis_language(line_numbers)
+    lines, max, codes = line_numbers_to_davis_language(line_numbers)
     
-    for line in program_lines:
+    for line in lines:
         print(line)
 
 if __name__ == "__main__":
